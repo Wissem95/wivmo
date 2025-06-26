@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL avec TimescaleDB
+  postgres:
+    image: timescale/timescaledb:latest-pg15
+    container_name: lifecompanion_postgres
+    environment:
+      POSTGRES_DB: lifecompanion
+      POSTGRES_USER: lifecompanion
+      POSTGRES_PASSWORD: lifecompanion_secret
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - lifecompanion
+
+  # Cache Redis
+  redis:
+    image: redis:7-alpine
+    container_name: lifecompanion_redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - lifecompanion
+
+  # MQTT Broker (Mosquitto)
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: lifecompanion_mqtt
+    ports:
+      - '1883:1883'
+      - '9001:9001'
+    volumes:
+      - ./docker/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_logs:/mosquitto/log
+    networks:
+      - lifecompanion
+
+  # Backend Laravel (développement)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: lifecompanion_backend
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./backend:/var/www/html
+      - /var/www/html/vendor
+    environment:
+      - APP_ENV=local
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_DATABASE=lifecompanion
+      - DB_USERNAME=lifecompanion
+      - DB_PASSWORD=lifecompanion_secret
+      - REDIS_HOST=redis
+      - MQTT_HOST=mqtt
+    depends_on:
+      - postgres
+      - redis
+      - mqtt
+    networks:
+      - lifecompanion
+
+  # Simulateur IoT (pour développement)
+  iot-simulator:
+    build:
+      context: ./iot
+      dockerfile: Dockerfile
+    container_name: lifecompanion_iot_simulator
+    environment:
+      - MQTT_HOST=mqtt
+      - MQTT_PORT=1883
+    depends_on:
+      - mqtt
+    networks:
+      - lifecompanion
+    volumes:
+      - ./iot:/app
+
+volumes:
+  postgres_data:
+  redis_data:
+  mosquitto_data:
+  mosquitto_logs:
+
+networks:
+  lifecompanion:
+    driver: bridge
