@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EnvironmentalController;
+use App\Http\Controllers\Api\ActivityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,10 +40,19 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 
-    // Placeholder pour autres routes API
+    // Données environnementales
+    Route::prefix('environmental')->group(function () {
+        Route::get('current', [EnvironmentalController::class, 'current']);
+        Route::get('history', [EnvironmentalController::class, 'history']);
+    });
+
+    // Activités utilisateur
+    Route::prefix('activities')->group(function () {
+        Route::get('current', [ActivityController::class, 'current']);
+        Route::get('history', [ActivityController::class, 'history']);
+    });
+
     // TODO: Ajouter les routes pour :
     // - Appareils IoT (/devices)
-    // - Lectures environnementales (/environmental-readings)
-    // - Classifications d'activité (/activity-classifications)
     // - Notifications (/notifications)
 });
