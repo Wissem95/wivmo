@@ -6,6 +6,8 @@ import 'package:get_it/get_it.dart';
 
 // Imports des blocs et services
 import 'blocs/auth/auth_bloc.dart';
+import 'blocs/auth/auth_event.dart';
+import 'blocs/auth/auth_state.dart';
 import 'blocs/environmental/environmental_bloc.dart';
 import 'blocs/activity/activity_bloc.dart';
 import 'blocs/notification/notification_bloc.dart';
@@ -22,7 +24,7 @@ import 'services/mqtt_service.dart';
 import 'services/notification_service.dart';
 
 // Imports des pages
-import 'ui/pages/splash_page.dart';
+// import 'ui/pages/splash/splash_page.dart';  // Temporairement désactivé
 import 'ui/pages/auth/login_page.dart';
 import 'ui/pages/home/home_page.dart';
 
@@ -126,12 +128,8 @@ class LifeCompanionApp extends StatelessWidget {
         // Configuration de localisation
         locale: const Locale('fr', 'FR'),
         
-        // Route initiale
-        home: const SplashPage(),
-        
         // Routes nommées
         routes: {
-          '/splash': (context) => const SplashPage(),
           '/login': (context) => const LoginPage(),
           '/home': (context) => const HomePage(),
         },
@@ -142,20 +140,8 @@ class LifeCompanionApp extends StatelessWidget {
           return null;
         },
         
-        // Gestionnaire d'erreurs
-        builder: (context, child) {
-          return BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
-              // Navigation basée sur l'état d'authentification
-              if (state is AuthAuthenticated) {
-                Navigator.pushReplacementNamed(context, '/home');
-              } else if (state is AuthUnauthenticated) {
-                Navigator.pushReplacementNamed(context, '/login');
-              }
-            },
-            child: child ?? const SizedBox.shrink(),
-          );
-        },
+        // Page d'accueil - commençons directement par la page de connexion
+        home: const LoginPage(),
       ),
     );
   }
@@ -164,20 +150,11 @@ class LifeCompanionApp extends StatelessWidget {
 /// Observateur personnalisé pour le debugging des Blocs
 class AppBlocObserver extends BlocObserver {
   @override
-  void onEvent(BlocBase bloc, Object? event) {
-    super.onEvent(bloc, event);
-    // Log des événements en mode debug
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    // Log des changements en mode debug
     if (AppConfig.isDebugMode) {
-      debugPrint('${bloc.runtimeType}: $event');
-    }
-  }
-
-  @override
-  void onTransition(BlocBase bloc, Transition transition) {
-    super.onTransition(bloc, transition);
-    // Log des transitions en mode debug
-    if (AppConfig.isDebugMode) {
-      debugPrint('${bloc.runtimeType}: $transition');
+      debugPrint('${bloc.runtimeType}: $change');
     }
   }
 

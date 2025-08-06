@@ -1,0 +1,20 @@
+# LifeCompanion IoT Simulator - Python Dependencies (Simplifié)
+# Simulateur de capteurs environnementaux
+
+# MQTT Client
+paho-mqtt==1.6.1
+
+# Random data generation
+Faker==19.6.2
+
+# HTTP server pour health checks
+Flask==2.3.2
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Math functions pour simulation réaliste
+random2==1.0.2
+
+# Date/time utilities
+python-dateutil==2.8.2

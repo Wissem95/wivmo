@@ -40,7 +40,6 @@ dependencies:
 
   # Notifications
   flutter_local_notifications: ^16.3.2
-  firebase_messaging: ^14.7.9
 
   # Géolocalisation
   geolocator: ^10.1.0
@@ -53,6 +52,7 @@ dependencies:
   # Utilitaires dates
   intl: ^0.19.0
   timezone: ^0.9.2
+  path_provider: ^2.1.4
 
   # Utilities
   get_it: ^7.6.7
@@ -91,36 +91,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  # Assets
-  assets:
-    - assets/images/
-    - assets/icons/
-    - assets/sounds/
-
-  # Fonts personnalisées
-  fonts:
-    - family: LifeCompanion
-      fonts:
-        - asset: assets/fonts/LifeCompanion-Regular.ttf
-        - asset: assets/fonts/LifeCompanion-Bold.ttf
-          weight: 700
-
-# Configuration des icônes de l'app
-flutter_launcher_icons:
-  android: 'launcher_icon'
-  ios: true
-  image_path: 'assets/icon/app_icon.png'
-  min_sdk_android: 21
-  web:
-    generate: true
-    image_path: 'assets/icon/app_icon.png'
-    background_color: '#hexcode'
-    theme_color: '#hexcode'
-  windows:
-    generate: true
-    image_path: 'assets/icon/app_icon.png'
-    icon_size: 48
-  macos:
-    generate: true
-    image_path: 'assets/icon/app_icon.png'

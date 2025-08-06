@@ -1,4 +1,4 @@
-# 📋 LifeCompanion - Vue d'Ensemble Complète du Projet
+# 📋 Womvi - Vue d'Ensemble Complète du Projet
 
 _Projet créé le 25 juin 2025 - Vue d'ensemble des 3 sprints_
 
@@ -6,7 +6,7 @@ _Projet créé le 25 juin 2025 - Vue d'ensemble des 3 sprints_
 
 ## 🎯 **Vision du Projet**
 
-LifeCompanion est une **plateforme IoT intelligente** qui transforme les données de capteurs environnementaux en insights personnalisés pour améliorer la qualité de vie des utilisateurs grâce à l'analyse de leurs environnements et activités.
+Womvi est une **plateforme IoT intelligente** qui transforme les données de capteurs environnementaux en insights personnalisés pour améliorer la qualité de vie des utilisateurs grâce à l'analyse de leurs environnements et activités.
 
 ---
 

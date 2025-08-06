@@ -1,0 +1,45 @@
+# LifeCompanion Backend - Dockerfile Development
+# Laravel 11 + PHP 8.4 + Extensions IoT
+
+FROM php:8.2-fpm
+
+# Installer les dépendances système
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libpq-dev \
+    zip \
+    unzip \
+    supervisor \
+    nginx \
+    && docker-php-ext-install pdo pdo_pgsql pgsql mbstring exif pcntl bcmath gd
+
+# Installer Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de configuration
+COPY docker/nginx/default.conf /etc/nginx/sites-available/default
+COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copier les fichiers du projet
+COPY . /app
+
+# Installer les dépendances
+RUN composer install --no-dev --optimize-autoloader
+
+# Configurer les permissions
+RUN chown -R www-data:www-data /app \
+    && chmod -R 755 /app/storage \
+    && chmod -R 755 /app/bootstrap/cache
+
+# Exposer le port
+EXPOSE 80
+
+# Démarrer supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"] 

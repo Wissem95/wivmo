@@ -46,13 +46,12 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.simple
     container_name: lifecompanion_backend
     ports:
       - '8000:8000'
     volumes:
-      - ./backend:/var/www/html
-      - /var/www/html/vendor
+      - ./backend:/app
     environment:
       - APP_ENV=local
       - DB_CONNECTION=pgsql
